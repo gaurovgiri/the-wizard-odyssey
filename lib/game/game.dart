@@ -6,6 +6,7 @@ import 'package:flame/events.dart';
 import 'package:flame/flame.dart';
 import 'package:flame/game.dart';
 import 'package:flame/parallax.dart';
+import 'package:flutter/material.dart';
 import 'package:runner/game/enemy_manager.dart';
 import 'package:runner/game/wizard.dart';
 
@@ -16,8 +17,9 @@ class RunnerGame extends FlameGame with TapDetector, HasCollisionDetection {
   EnemyManager enemyManager = EnemyManager();
   int score = 0;
   int level = 1;
-  int thresholdLevel = 20;
+  int thresholdLevel = 15;
   final scoreText = TextComponent();
+  late final ParallaxComponent parallax;
 
   @override
   FutureOr<void> onLoad() async {
@@ -27,7 +29,7 @@ class RunnerGame extends FlameGame with TapDetector, HasCollisionDetection {
 
     camera.viewfinder.position = camera.viewport.virtualSize * 0.5;
 
-    final parallax = await loadParallaxComponent(
+    parallax = await loadParallaxComponent(
       [
         ParallaxImageData('parallax/1.png'),
         ParallaxImageData('parallax/4.png'),
@@ -47,7 +49,7 @@ class RunnerGame extends FlameGame with TapDetector, HasCollisionDetection {
     world.add(wizard);
     world.add(enemyManager);
     world.add(scoreText);
-
+    overlays.add("Hearts");
     return super.onLoad();
   }
 

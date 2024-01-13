@@ -1,6 +1,7 @@
 import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
 import 'package:runner/game/game.dart';
+import 'package:runner/game/overlay.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -27,6 +28,10 @@ class RunnerHome extends StatefulWidget {
 class _RunnerHomeState extends State<RunnerHome> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(body: GameWidget(game: RunnerGame()));
+    return Scaffold(
+        body: GameWidget(game: RunnerGame(), overlayBuilderMap: {
+      "Pause": pauseBuilder,
+      "Hearts": heartsBuilder,
+    }));
   }
 }

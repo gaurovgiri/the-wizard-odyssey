@@ -61,7 +61,7 @@ class Wizard extends SpriteAnimationComponent
     ymax = size.y - 150;
 
     _timer = Timer(0.5, onTick: () {
-      move();
+      attack();
       hasCollided = false;
     });
 
