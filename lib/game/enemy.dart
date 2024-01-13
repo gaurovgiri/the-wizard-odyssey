@@ -4,11 +4,14 @@ import 'dart:math';
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:runner/game/game.dart';
+import 'package:runner/game/wizard.dart';
 
 enum EnemyType { Goblin, FlyingEye, Mushroom, Skeleton }
 
 class Enemy extends SpriteAnimationComponent
     with HasGameRef<RunnerGame>, CollisionCallbacks {
+  bool hasCollided = false;
+  bool hasFinished = false;
   static const Map<EnemyType, String> actionMap = {
     EnemyType.Goblin: 'Run',
     EnemyType.FlyingEye: 'Flight',
@@ -53,9 +56,23 @@ class Enemy extends SpriteAnimationComponent
   void update(double dt) {
     super.update(dt);
     position.x -= dt * 200;
+
+    if ((position.x < 200) && !hasCollided && !hasFinished) {
+      gameRef.score += 1;
+      hasFinished = true;
+    }
+
+    if ((position.x < -size.x)) {
+      removeFromParent();
+    }
   }
 
-  bool destroy() {
-    return position.x < -size.x;
+  @override
+  void onCollision(Set<Vector2> intersectionPoints, other) {
+    super.onCollision(intersectionPoints, other);
+    if (other is Wizard && !hasCollided) {
+      print("hello");
+      hasCollided = true;
+    }
   }
 }
