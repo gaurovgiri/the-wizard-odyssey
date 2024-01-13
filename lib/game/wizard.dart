@@ -12,6 +12,12 @@ enum WizardState {
 class Wizard extends SpriteAnimationComponent with HasGameRef<RunnerGame> {
   Map<WizardState, SpriteAnimation> animationMap = {};
   WizardState state = WizardState.idle;
+
+  double speedY = 0.0;
+  double gravity = 1000.0;
+
+  double ymax = 0;
+
   Wizard() {
     size = Vector2(250, 300);
   }
@@ -45,8 +51,9 @@ class Wizard extends SpriteAnimationComponent with HasGameRef<RunnerGame> {
     };
 
     animation = animationMap[WizardState.idle];
-    position = Vector2(size.x / 50, size.y - 150);
     size = Vector2(250, 300);
+    position = Vector2(size.x / 50, size.y - 150);
+    ymax = size.y - 150;
 
     return super.onLoad();
   }
@@ -64,5 +71,27 @@ class Wizard extends SpriteAnimationComponent with HasGameRef<RunnerGame> {
   void idle() {
     state = WizardState.idle;
     animation = animationMap[state];
+  }
+
+  void jump() {
+    if (onGround()) {
+      speedY = -500;
+    }
+  }
+
+  bool onGround() {
+    return position.y >= ymax;
+  }
+
+  @override
+  void update(double dt) {
+    super.update(dt);
+    speedY += gravity * dt;
+    position.y += speedY * dt;
+
+    if (onGround()) {
+      position.y = ymax;
+      speedY = 0.0;
+    }
   }
 }

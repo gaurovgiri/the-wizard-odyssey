@@ -38,5 +38,6 @@ class RunnerGame extends FlameGame with TapDetector {
   void onTapDown(TapDownInfo info) {
     // TODO: implement onTapDown
     super.onTapDown(info);
+    wizard.jump();
   }
 }
