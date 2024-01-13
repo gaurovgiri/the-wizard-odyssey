@@ -6,18 +6,22 @@ import 'package:flame/events.dart';
 import 'package:flame/flame.dart';
 import 'package:flame/game.dart';
 import 'package:flame/parallax.dart';
-import 'package:runner/game/enemy.dart';
 import 'package:runner/game/enemy_manager.dart';
 import 'package:runner/game/wizard.dart';
 
-class RunnerGame extends FlameGame with TapDetector {
+class RunnerGame extends FlameGame with TapDetector, HasCollisionDetection {
+  RunnerGame({super.camera});
+
   Wizard wizard = Wizard();
   EnemyManager enemyManager = EnemyManager();
 
   @override
   FutureOr<void> onLoad() async {
+    // debugMode = true;
     await Flame.device.fullScreen();
     await Flame.device.setLandscape();
+
+    camera.viewfinder.position = camera.viewport.virtualSize * 0.5;
 
     final parallax = await loadParallaxComponent(
       [
@@ -31,9 +35,10 @@ class RunnerGame extends FlameGame with TapDetector {
       velocityMultiplierDelta: Vector2(1.5, 1.0),
     );
 
-    add(parallax);
-    add(wizard);
-    add(enemyManager);
+    camera.backdrop.add(parallax);
+
+    world.add(wizard);
+    world.add(enemyManager);
 
     return super.onLoad();
   }

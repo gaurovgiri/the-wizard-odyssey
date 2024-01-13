@@ -1,12 +1,14 @@
 import 'dart:async';
 import 'dart:math';
 
+import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:runner/game/game.dart';
 
 enum EnemyType { Goblin, FlyingEye, Mushroom, Skeleton }
 
-class Enemy extends SpriteAnimationComponent with HasGameRef<RunnerGame> {
+class Enemy extends SpriteAnimationComponent
+    with HasGameRef<RunnerGame>, CollisionCallbacks {
   static const Map<EnemyType, String> actionMap = {
     EnemyType.Goblin: 'Run',
     EnemyType.FlyingEye: 'Flight',
@@ -37,8 +39,14 @@ class Enemy extends SpriteAnimationComponent with HasGameRef<RunnerGame> {
                     ? 250
                     : 150
                 : 150));
+
+    await add(RectangleHitbox(
+        position: Vector2(size.x / 2, size.y / 2),
+        size: size * 0.2,
+        anchor: Anchor.center));
     flipHorizontally();
-    return super.onLoad();
+
+    super.onLoad();
   }
 
   @override

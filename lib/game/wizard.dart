@@ -1,18 +1,19 @@
+import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
+import 'package:runner/game/enemy.dart';
 import 'package:runner/game/game.dart';
 
-enum WizardState {
-  idle,
-  move,
-  attack,
-}
+enum WizardState { idle, move, attack, takeHit }
 
-class Wizard extends SpriteAnimationComponent with HasGameRef<RunnerGame> {
+class Wizard extends SpriteAnimationComponent
+    with HasGameRef<RunnerGame>, CollisionCallbacks {
   Map<WizardState, SpriteAnimation> animationMap = {};
   WizardState state = WizardState.idle;
-
+  bool hasCollided = false;
   double speedY = 0.0;
   double gravity = 1000.0;
+
+  Timer _timer = Timer(1);
 
   double ymax = 0;
 
@@ -46,14 +47,31 @@ class Wizard extends SpriteAnimationComponent with HasGameRef<RunnerGame> {
             stepTime: 0.1,
             textureSize: Vector2(150, 150),
           )),
+      WizardState.takeHit: await SpriteAnimation.load(
+          'Player/Take Hit.png',
+          SpriteAnimationData.sequenced(
+            amount: 4,
+            stepTime: 0.1,
+            textureSize: Vector2(150, 150),
+          )),
     };
 
     animation = animationMap[WizardState.move];
-    size = Vector2(250, 300);
     position = Vector2(size.x / 50, size.y - 150);
     ymax = size.y - 150;
 
-    return super.onLoad();
+    _timer = Timer(0.5, onTick: () {
+      move();
+      hasCollided = false;
+    });
+
+    await add(
+      RectangleHitbox(
+          position: Vector2(size.x / 2, size.y / 2),
+          size: size * 0.2,
+          anchor: Anchor.center),
+    );
+    super.onLoad();
   }
 
   void move() {
@@ -71,9 +89,16 @@ class Wizard extends SpriteAnimationComponent with HasGameRef<RunnerGame> {
     animation = animationMap[state];
   }
 
+  void takeHit() {
+    state = WizardState.takeHit;
+    animation = animationMap[state];
+  }
+
   void jump() {
     if (onGround()) {
       speedY = -500;
+      idle();
+      _timer.start();
     }
   }
 
@@ -84,15 +109,24 @@ class Wizard extends SpriteAnimationComponent with HasGameRef<RunnerGame> {
   @override
   void update(double dt) {
     super.update(dt);
+
     speedY += gravity * dt;
     position.y += speedY * dt;
+    _timer.update(dt);
 
     if (onGround()) {
       position.y = ymax;
       speedY = 0.0;
-      move();
-    } else {
-      idle();
+    }
+  }
+
+  @override
+  void onCollision(Set<Vector2> intersectionPoints, PositionComponent other) {
+    super.onCollision(intersectionPoints, other);
+    if ((other is Enemy) && !hasCollided) {
+      hasCollided = true;
+      takeHit();
+      _timer.start();
     }
   }
 }

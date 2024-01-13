@@ -14,7 +14,7 @@ class EnemyManager extends Component with HasGameReference<RunnerGame> {
 
   void _spawnEnemy() {
     final enemy = Enemy(EnemyType.values[random.nextInt(4)]);
-    game.add(enemy);
+    game.world.add(enemy);
   }
 
   @override
