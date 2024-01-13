@@ -7,11 +7,13 @@ import 'package:flame/flame.dart';
 import 'package:flame/game.dart';
 import 'package:flame/parallax.dart';
 import 'package:runner/game/enemy.dart';
+import 'package:runner/game/enemy_manager.dart';
 import 'package:runner/game/wizard.dart';
 
 class RunnerGame extends FlameGame with TapDetector {
   Wizard wizard = Wizard();
-  Enemy enemy = Enemy();
+  EnemyManager enemyManager = EnemyManager();
+
   @override
   FutureOr<void> onLoad() async {
     await Flame.device.fullScreen();
@@ -31,7 +33,7 @@ class RunnerGame extends FlameGame with TapDetector {
 
     add(parallax);
     add(wizard);
-    add(enemy);
+    add(enemyManager);
 
     return super.onLoad();
   }
