@@ -6,9 +6,10 @@ import 'package:runner/game/game.dart';
 
 class EnemyManager extends Component with HasGameReference<RunnerGame> {
   final Random random = Random();
-  final Timer _timer = Timer(2, repeat: true);
+  final Timer _timer = Timer(4, repeat: true);
 
   EnemyManager() {
+    _timer.limit = random.nextDouble() * 4;
     _timer.onTick = _spawnEnemy;
   }
 

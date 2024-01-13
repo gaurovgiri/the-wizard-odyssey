@@ -21,7 +21,7 @@ class Enemy extends SpriteAnimationComponent
 
   final EnemyType type;
   Enemy(this.type) {
-    size = Vector2(250, 300);
+    size = Vector2(250, 275);
   }
 
   @override
@@ -36,7 +36,8 @@ class Enemy extends SpriteAnimationComponent
     );
     position = Vector2(
         gameRef.size.x + size.x,
-        size.y -
+        size.y +
+            40 -
             (actionMap[type] == 'Flight'
                 ? Random().nextBool()
                     ? 250
@@ -55,7 +56,11 @@ class Enemy extends SpriteAnimationComponent
   @override
   void update(double dt) {
     super.update(dt);
-    position.x -= dt * 200;
+    if (game.level <= game.thresholdLevel) {
+      position.x -= dt * (200 + 20 * game.level);
+    } else {
+      position.x -= dt * (200 + 20 * game.thresholdLevel);
+    }
 
     if ((position.x < 200) && !hasCollided && !hasFinished) {
       gameRef.score += 1;
@@ -71,7 +76,6 @@ class Enemy extends SpriteAnimationComponent
   void onCollision(Set<Vector2> intersectionPoints, other) {
     super.onCollision(intersectionPoints, other);
     if (other is Wizard && !hasCollided) {
-      print("hello");
       hasCollided = true;
     }
   }
