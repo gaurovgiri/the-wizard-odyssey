@@ -6,6 +6,7 @@ import 'package:flame/events.dart';
 import 'package:flame/flame.dart';
 import 'package:flame/game.dart';
 import 'package:flame/parallax.dart';
+import 'package:flutter/material.dart';
 import 'package:runner/game/enemy_manager.dart';
 import 'package:runner/game/wizard.dart';
 
@@ -14,6 +15,8 @@ class RunnerGame extends FlameGame with TapDetector, HasCollisionDetection {
 
   Wizard wizard = Wizard();
   EnemyManager enemyManager = EnemyManager();
+  int score = 0;
+  final scoreText = TextComponent();
 
   @override
   FutureOr<void> onLoad() async {
@@ -36,17 +39,27 @@ class RunnerGame extends FlameGame with TapDetector, HasCollisionDetection {
     );
 
     camera.backdrop.add(parallax);
+    scoreText.text = 'Score: $score';
+    scoreText.position = Vector2((size.x / 2) - (scoreText.width / 2), 0);
+    world.add(scoreText);
 
     world.add(wizard);
     world.add(enemyManager);
+    world.add(scoreText);
 
     return super.onLoad();
   }
 
   @override
   void onTapDown(TapDownInfo info) {
-    // TODO: implement onTapDown
     super.onTapDown(info);
     wizard.jump();
+  }
+
+  @override
+  void update(double dt) {
+    score += (dt * 60).toInt();
+    scoreText.text = 'Score: $score';
+    super.update(dt);
   }
 }
