@@ -1,6 +1,4 @@
 import 'package:flame/components.dart';
-import 'package:flame/events.dart';
-import 'package:flame/game.dart';
 import 'package:runner/game/game.dart';
 
 enum WizardState {
@@ -26,7 +24,7 @@ class Wizard extends SpriteAnimationComponent with HasGameRef<RunnerGame> {
   Future<void> onLoad() async {
     animationMap = {
       WizardState.idle: await SpriteAnimation.load(
-        'Idle.png',
+        'Player/Idle.png',
         SpriteAnimationData.sequenced(
           amount: 8,
           textureSize: Vector2(150, 150),
@@ -34,7 +32,7 @@ class Wizard extends SpriteAnimationComponent with HasGameRef<RunnerGame> {
         ),
       ),
       WizardState.move: await SpriteAnimation.load(
-        'Move.png',
+        'Player/Move.png',
         SpriteAnimationData.sequenced(
           amount: 8,
           textureSize: Vector2(150, 150),
@@ -42,7 +40,7 @@ class Wizard extends SpriteAnimationComponent with HasGameRef<RunnerGame> {
         ),
       ),
       WizardState.attack: await SpriteAnimation.load(
-          'Attack.png',
+          'Player/Attack.png',
           SpriteAnimationData.sequenced(
             amount: 8,
             stepTime: 0.1,
@@ -50,7 +48,7 @@ class Wizard extends SpriteAnimationComponent with HasGameRef<RunnerGame> {
           )),
     };
 
-    animation = animationMap[WizardState.idle];
+    animation = animationMap[WizardState.move];
     size = Vector2(250, 300);
     position = Vector2(size.x / 50, size.y - 150);
     ymax = size.y - 150;
@@ -92,6 +90,9 @@ class Wizard extends SpriteAnimationComponent with HasGameRef<RunnerGame> {
     if (onGround()) {
       position.y = ymax;
       speedY = 0.0;
+      move();
+    } else {
+      idle();
     }
   }
 }

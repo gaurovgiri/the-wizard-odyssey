@@ -1,16 +1,17 @@
 // Class where the world is defined.
 import 'dart:async';
-import 'dart:ui';
 
 import 'package:flame/components.dart';
 import 'package:flame/events.dart';
 import 'package:flame/flame.dart';
 import 'package:flame/game.dart';
 import 'package:flame/parallax.dart';
+import 'package:runner/game/enemy.dart';
 import 'package:runner/game/wizard.dart';
 
 class RunnerGame extends FlameGame with TapDetector {
   Wizard wizard = Wizard();
+  Enemy enemy = Enemy();
   @override
   FutureOr<void> onLoad() async {
     await Flame.device.fullScreen();
@@ -30,6 +31,7 @@ class RunnerGame extends FlameGame with TapDetector {
 
     add(parallax);
     add(wizard);
+    add(enemy);
 
     return super.onLoad();
   }
