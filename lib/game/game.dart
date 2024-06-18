@@ -6,7 +6,6 @@ import 'package:flame/events.dart';
 import 'package:flame/flame.dart';
 import 'package:flame/game.dart';
 import 'package:flame/parallax.dart';
-import 'package:flutter/material.dart';
 import 'package:runner/game/enemy_manager.dart';
 import 'package:runner/game/wizard.dart';
 

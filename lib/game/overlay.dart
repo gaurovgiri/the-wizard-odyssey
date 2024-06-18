@@ -21,13 +21,13 @@ OverlayWidgetBuilder pauseBuilder = (BuildContext context, Game game) {
 };
 
 OverlayWidgetBuilder heartsBuilder = (BuildContext context, Game game) {
-  return Positioned(
+  return const Positioned(
     top: 0,
     right: 0,
-    child: Container(
+    child: SizedBox(
       width: 200,
       height: 75,
-      child: const Center(
+      child: Center(
           child: Row(
         children: [
           Icon(Icons.favorite, color: Color.fromARGB(255, 255, 0, 0)),
